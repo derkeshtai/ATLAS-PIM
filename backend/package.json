@@ -35,7 +35,9 @@
     "xml2js": "^0.6.2",
     "uuid": "^9.0.1",
     "morgan": "^1.10.0",
-    "compression": "^1.7.4"
+    "compression": "^1.7.4",
+    "axios": "^1.6.2",
+    "axios-retry": "^4.0.0"
   },
   "devDependencies": {
     "@types/xml2js": "^0.4.14",

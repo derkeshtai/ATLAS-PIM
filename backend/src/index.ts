@@ -15,6 +15,7 @@ import productRoutes from './routes/productRoutes';
 import imageRoutes from './routes/imageRoutes';
 import importRoutes from './routes/importRoutes';
 import exportRoutes from './routes/exportRoutes';
+import cvaRoutes from './routes/cvaRoutes';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -70,6 +71,7 @@ app.use(`${apiPrefix}/products`, productRoutes);
 app.use(`${apiPrefix}/images`, imageRoutes);
 app.use(`${apiPrefix}/import`, importRoutes);
 app.use(`${apiPrefix}/export`, exportRoutes);
+app.use(`${apiPrefix}/cva`, cvaRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -84,6 +86,7 @@ app.get('/', (req, res) => {
       images: `${apiPrefix}/images`,
       import: `${apiPrefix}/import`,
       export: `${apiPrefix}/export`,
+      cva: `${apiPrefix}/cva`,
     },
   });
 });
