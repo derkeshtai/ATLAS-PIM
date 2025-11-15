@@ -16,6 +16,7 @@ import imageRoutes from './routes/imageRoutes';
 import importRoutes from './routes/importRoutes';
 import exportRoutes from './routes/exportRoutes';
 import cvaRoutes from './routes/cvaRoutes';
+import aiCurationRoutes from './routes/aiCurationRoutes';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -72,6 +73,7 @@ app.use(`${apiPrefix}/images`, imageRoutes);
 app.use(`${apiPrefix}/import`, importRoutes);
 app.use(`${apiPrefix}/export`, exportRoutes);
 app.use(`${apiPrefix}/cva`, cvaRoutes);
+app.use(`${apiPrefix}/ai`, aiCurationRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -87,6 +89,7 @@ app.get('/', (req, res) => {
       import: `${apiPrefix}/import`,
       export: `${apiPrefix}/export`,
       cva: `${apiPrefix}/cva`,
+      ai: `${apiPrefix}/ai`,
     },
   });
 });
