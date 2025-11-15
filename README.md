@@ -84,6 +84,7 @@ cd prestashop-module
 ### Importación
 - `POST /api/import/csv` - Importar desde CSV
 - `POST /api/import/excel` - Importar desde Excel
+- `POST /api/import/xml/supplier` - **Importar XML del proveedor** (incluye promociones, ubicaciones de stock, etc.)
 
 ### Exportación
 - `GET /api/export/prestashop` - Exportar a formato Prestashop
@@ -91,6 +92,29 @@ cd prestashop-module
 ### Imágenes
 - `POST /api/images/upload` - Subir imagen
 - `POST /api/images/optimize` - Optimizar imágenes
+
+## 🎯 Importación XML del Proveedor
+
+El sistema está **optimizado para importar directamente los archivos XML** que proporciona tu proveedor:
+
+```bash
+curl -X POST http://localhost:3000/api/v1/import/xml/supplier \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "file=@productos_proveedor.xml"
+```
+
+### Características de la Importación XML:
+
+✅ **Mapeo automático** de todos los campos del proveedor
+✅ **Creación automática** de categorías jerárquicas (grupo → subgrupo)
+✅ **Creación automática** de marcas
+✅ **Gestión de promociones** con fechas de vencimiento
+✅ **Stock multi-ubicación** (21 ubicaciones de almacén)
+✅ **Descarga y optimización** automática de imágenes
+✅ **Actualización inteligente** de productos existentes
+✅ **Soporte para tipo de cambio** (Dólares/Pesos)
+
+Ver documentación completa: [`docs/MAPEO-XML-PROVEEDOR.md`](docs/MAPEO-XML-PROVEEDOR.md)
 
 ## Configuración
 

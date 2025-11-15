@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import importController from '../controllers/importController';
+import xmlImportController from '../controllers/xmlImportController';
 import { authenticate, authorize } from '../middleware/auth';
 
 const router = Router();
@@ -34,6 +35,15 @@ router.get(
   '/history',
   authenticate,
   importController.getHistory.bind(importController)
+);
+
+// XML Import from supplier (admin and editor only)
+router.post(
+  '/xml/supplier',
+  authenticate,
+  authorize('admin', 'editor'),
+  upload.single('file'),
+  xmlImportController.importSupplierXML.bind(xmlImportController)
 );
 
 export default router;
