@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import importController from '../controllers/importController';
 import xmlImportController from '../controllers/xmlImportController';
+import icecatImportController from '../controllers/icecatImportController';
 import { authenticate, authorize } from '../middleware/auth';
 
 const router = Router();
@@ -44,6 +45,49 @@ router.post(
   authorize('admin', 'editor'),
   upload.single('file'),
   xmlImportController.importSupplierXML.bind(xmlImportController)
+);
+
+// Icecat integration routes (admin and editor only)
+
+// Import from Icecat Excel file
+router.post(
+  '/icecat/excel',
+  authenticate,
+  authorize('admin', 'editor'),
+  upload.single('file'),
+  icecatImportController.importIcecatExcel.bind(icecatImportController)
+);
+
+// Sync single product from Icecat API by GTIN
+router.post(
+  '/icecat/sync/:gtin',
+  authenticate,
+  authorize('admin', 'editor'),
+  icecatImportController.syncByGTIN.bind(icecatImportController)
+);
+
+// Sync multiple products from Icecat API by GTIN list
+router.post(
+  '/icecat/sync/bulk',
+  authenticate,
+  authorize('admin', 'editor'),
+  icecatImportController.syncBulkByGTIN.bind(icecatImportController)
+);
+
+// Update existing product with fresh Icecat data
+router.put(
+  '/icecat/update/:productId',
+  authenticate,
+  authorize('admin', 'editor'),
+  icecatImportController.updateProduct.bind(icecatImportController)
+);
+
+// Test Icecat API connection (for debugging)
+router.get(
+  '/icecat/test/:gtin',
+  authenticate,
+  authorize('admin'),
+  icecatImportController.testIcecatApi.bind(icecatImportController)
 );
 
 export default router;

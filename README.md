@@ -6,7 +6,8 @@ Sistema PIM (Product Information Management) diseñado para enriquecer y estanda
 
 - 🎯 **Gestión centralizada** de información de productos
 - 📸 **Optimización automática** de imágenes
-- 🔄 **Importación masiva** desde CSV/Excel de proveedores
+- 🔄 **Importación masiva** desde CSV/Excel/XML de proveedores
+- 🌟 **Integración Icecat** - Enriquecimiento automático con especificaciones técnicas, imágenes HD, videos, manuales
 - 🚀 **API REST** para integración con múltiples plataformas
 - 🛒 **Integración nativa** con Prestashop 9.0
 - 🔐 **Autenticación JWT** para seguridad
@@ -86,6 +87,13 @@ cd prestashop-module
 - `POST /api/import/excel` - Importar desde Excel
 - `POST /api/import/xml/supplier` - **Importar XML del proveedor** (incluye promociones, ubicaciones de stock, etc.)
 
+### Integración Icecat
+- `POST /api/import/icecat/excel` - **Importar archivo Excel de Icecat**
+- `POST /api/import/icecat/sync/:gtin` - **Sincronizar producto por GTIN desde API Icecat**
+- `POST /api/import/icecat/sync/bulk` - **Sincronizar múltiples productos (hasta 100 GTINs)**
+- `PUT /api/import/icecat/update/:productId` - **Actualizar producto con datos frescos de Icecat**
+- `GET /api/import/icecat/test/:gtin` - Test de conexión con Icecat API
+
 ### Exportación
 - `GET /api/export/prestashop` - Exportar a formato Prestashop
 
@@ -115,6 +123,33 @@ curl -X POST http://localhost:3000/api/v1/import/xml/supplier \
 ✅ **Soporte para tipo de cambio** (Dólares/Pesos)
 
 Ver documentación completa: [`docs/MAPEO-XML-PROVEEDOR.md`](docs/MAPEO-XML-PROVEEDOR.md)
+
+## 🌟 Integración Icecat
+
+El sistema incluye **integración completa con Icecat** para enriquecer automáticamente tus productos con:
+
+- ✅ **Especificaciones técnicas detalladas** (cientos de atributos por producto)
+- ✅ **Imágenes de alta calidad** (ProductGallery, HighPic, LowPic)
+- ✅ **Videos demostrativos** y videos 360°
+- ✅ **Documentación** (fichas técnicas PDF, manuales de usuario)
+- ✅ **Datos estructurados** (categorías, modelos, garantías)
+
+### Dos formas de integración:
+
+**1. Importación desde Excel** (carga masiva):
+```bash
+curl -X POST http://localhost:3000/api/v1/import/icecat/excel \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "file=@icecat_products.xlsx"
+```
+
+**2. API en tiempo real** (por GTIN/EAN):
+```bash
+curl -X POST http://localhost:3000/api/v1/import/icecat/sync/7331021041875 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+Ver guía completa: [`docs/ICECAT-INTEGRATION.md`](docs/ICECAT-INTEGRATION.md)
 
 ## Configuración
 
