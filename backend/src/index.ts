@@ -17,12 +17,16 @@ import importRoutes from './routes/importRoutes';
 import exportRoutes from './routes/exportRoutes';
 import cvaRoutes from './routes/cvaRoutes';
 import aiCurationRoutes from './routes/aiCurationRoutes';
+import cronJobRoutes from './routes/cronJobRoutes';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 // Import database
 import pool from './config/database';
+
+// Import cron jobs
+import { cronJobService } from './services/cronJobService';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -74,6 +78,7 @@ app.use(`${apiPrefix}/import`, importRoutes);
 app.use(`${apiPrefix}/export`, exportRoutes);
 app.use(`${apiPrefix}/cva`, cvaRoutes);
 app.use(`${apiPrefix}/ai`, aiCurationRoutes);
+app.use(`${apiPrefix}/cron`, cronJobRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -90,6 +95,7 @@ app.get('/', (req, res) => {
       export: `${apiPrefix}/export`,
       cva: `${apiPrefix}/cva`,
       ai: `${apiPrefix}/ai`,
+      cron: `${apiPrefix}/cron`,
     },
   });
 });
@@ -106,6 +112,14 @@ const startServer = async () => {
     // Test database connection
     await pool.query('SELECT NOW()');
     console.log('✓ Database connection successful');
+
+    // Initialize cron jobs
+    if (process.env.ENABLE_CRON_JOBS !== 'false') {
+      await cronJobService.initialize();
+      console.log('✓ Cron jobs initialized');
+    } else {
+      console.log('⊘ Cron jobs disabled (ENABLE_CRON_JOBS=false)');
+    }
 
     app.listen(PORT, () => {
       console.log('═══════════════════════════════════════════════');
@@ -139,12 +153,14 @@ process.on('uncaughtException', (err: Error) => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received, shutting down gracefully...');
+  cronJobService.stopAll();
   await pool.end();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('SIGINT received, shutting down gracefully...');
+  cronJobService.stopAll();
   await pool.end();
   process.exit(0);
 });
